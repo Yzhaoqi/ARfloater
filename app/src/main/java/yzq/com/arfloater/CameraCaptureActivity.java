@@ -34,6 +34,9 @@ public class CameraCaptureActivity extends AppCompatActivity {
     private CameraCaptureSession mCameraCaptureSession;
     private CameraDevice mCameraDevice;
 
+
+    // TODO: Dynamic permission
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
