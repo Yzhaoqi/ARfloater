@@ -15,6 +15,7 @@ limitations under the License.
 
 package yzq.com.arfloater.camera.tracking;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,8 +28,11 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import yzq.com.arfloater.R;
 import yzq.com.arfloater.camera.Classifier.Recognition;
 import yzq.com.arfloater.camera.env.BorderedText;
 import yzq.com.arfloater.camera.env.ImageUtils;
@@ -195,6 +199,23 @@ public class MultiBoxTracker {
     }
   }
 
+  public class FirstTrackInfo {
+    public RectF location;
+    public String title;
+  }
+
+  public FirstTrackInfo getFirstTrackedRecognition() {
+    if (!trackedObjects.isEmpty()) {
+      FirstTrackInfo firstTrackInfo = new FirstTrackInfo();
+      firstTrackInfo.location = new RectF(trackedObjects.get(0).location);
+      getFrameToCanvasMatrix().mapRect(firstTrackInfo.location);
+      firstTrackInfo.title = trackedObjects.get(0).title;
+      return firstTrackInfo;
+    } else {
+      return null;
+    }
+  }
+
   private boolean initialized = false;
 
   public synchronized void onFrame(
@@ -276,6 +297,7 @@ public class MultiBoxTracker {
 
     if (rectsToTrack.isEmpty()) {
       logger.v("Nothing to track, aborting.");
+      trackedObjects.clear();
       return;
     }
 

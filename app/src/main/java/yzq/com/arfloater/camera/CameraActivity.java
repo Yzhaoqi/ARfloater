@@ -22,6 +22,7 @@ import android.util.Size;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.nio.ByteBuffer;
