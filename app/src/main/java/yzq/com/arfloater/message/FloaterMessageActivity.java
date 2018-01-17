@@ -2,15 +2,16 @@ package yzq.com.arfloater.message;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import yzq.com.arfloater.been.Floater;
 import yzq.com.arfloater.been.FloaterLabel;
 import yzq.com.arfloater.server.FloaterServer;
 
-public class FloaterMessageActivity extends AppCompatActivity {
+public class FloaterMessageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int EDIT_MODE = 0;
     private static final int MESSAGE_MODE = 1;
 
@@ -35,8 +36,11 @@ public class FloaterMessageActivity extends AppCompatActivity {
     private int mode;
     private LinearLayout editLayout, messageLayout;
     private TextView title, locationText, message;
-    private EditText editText;
-    //TODO add Leave Words;
+    private EditText editText, editWord;
+    private RecyclerView leaveWordRecycler;
+    private Button floaterSend, leaveWordSend;
+    private Floater mFloater;
+    private LeaveWordsAdapter leaveWordsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +58,16 @@ public class FloaterMessageActivity extends AppCompatActivity {
         title = (TextView)findViewById(R.id.floater_title);
         locationText = (TextView)findViewById(R.id.floater_location);
         message = (TextView)findViewById(R.id.floater_message);
+        editText = (EditText)findViewById(R.id.edit_text);
+        editWord = (EditText)findViewById(R.id.message_edit_words);
+        floaterSend = (Button)findViewById(R.id.floater_send);
+        leaveWordSend = (Button)findViewById(R.id.leave_word_send);
+        leaveWordRecycler = (RecyclerView)findViewById(R.id.message_list);
+        leaveWordRecycler.setLayoutManager(new LinearLayoutManager(this));
 
         locationHelper.registerListener();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.floater_send, menu);
-        return true;
+        floaterSend.setOnClickListener(this);
+        leaveWordSend.setOnClickListener(this);
     }
 
     @Override
@@ -70,19 +76,51 @@ public class FloaterMessageActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.floater_send:
-                // TODO
-                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.floater_send:
+            case R.id.leave_word_send:
+                sendFloater();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void sendFloater() {
+        if (mode == EDIT_MODE) {
+            if (editText.getText().toString().isEmpty()) {
+                Toast.makeText(this, "请编辑漂流瓶", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String s = editText.getText().toString();
+            Floater floater = new Floater(floaterLabel);
+            floater.setText(s);
+            new SubmitTask(this, floater, mode).execute();
+        } else {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(editWord.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+            if (editWord.getText().toString().isEmpty()) {
+                Toast.makeText(this, "留言不能为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String s = editWord.getText().toString();
+            mFloater.addLeaveWord(s);
+            new SubmitTask(this, mFloater, mode).execute();
+        }
     }
 
     @Override
     protected void onResume() {
-        new FloaterGettingTask(this, floaterLabel, floaterServer).execute();
+        new FloaterGettingTask(this).execute();
         super.onResume();
     }
 
@@ -92,21 +130,17 @@ public class FloaterMessageActivity extends AppCompatActivity {
     }
 
     private class FloaterGettingTask extends AsyncTask<Void, Void, Floater> {
-        private FloaterServer floaterServer;
         private Context context;
         private ProgressDialog pd;
-        private FloaterLabel floaterLabel;
 
-        public FloaterGettingTask(Context context, FloaterLabel floaterLabel, FloaterServer server) {
-            this.floaterServer = FloaterServer.getInstance();
+        public FloaterGettingTask(Context context) {
             this.context = context;
-            this.floaterLabel = floaterLabel;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = ProgressDialog.show(context, "Floater", "Checking...");
+            pd = ProgressDialog.show(context, "获取漂流瓶中", "请稍后...");
         }
 
         @Override
@@ -116,22 +150,26 @@ public class FloaterMessageActivity extends AppCompatActivity {
             Log.i("BDLocation", String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude()));
             floaterLabel.setLatitude(location.getLatitude());
             floaterLabel.setLongitude(location.getLongitude());
-            return null;
+            return floaterServer.getFloater(floaterLabel);
         }
 
         @Override
         protected void onPostExecute(Floater floater) {
             pd.cancel();
-            BDLocation location = locationHelper.getLocation();
-            Toast.makeText(FloaterMessageActivity.this, String.valueOf(location.getLatitude()) + " " + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
-            //title.setText("Title: "+ floater.getTitle());
+            title.setText(getString(R.string.title) + floaterLabel.getTitle());
+            locationText.setText(getString(R.string.message_location)+ String.valueOf(floaterLabel.getLongitude()) + " "+ String.valueOf(floaterLabel.getLatitude()));
             if (floater == null) {
+                FloaterMessageActivity.this.setTitle("Edit Floater");
                 mode = EDIT_MODE;
                 editLayout.setVisibility(View.VISIBLE);
             } else {
+                FloaterMessageActivity.this.setTitle("Read Floater");
                 mode = MESSAGE_MODE;
                 messageLayout.setVisibility(View.VISIBLE);
                 message.setText(floater.getText());
+                leaveWordsAdapter = new LeaveWordsAdapter(floater.getLeaveWords());
+                leaveWordRecycler.setAdapter(leaveWordsAdapter);
+                mFloater = floater;
             }
         }
     }
@@ -140,29 +178,41 @@ public class FloaterMessageActivity extends AppCompatActivity {
         private ProgressDialog pd;
         private Context context;
         private Floater floater;
+        private int mode;
 
         public SubmitTask(Context context, Floater floater, int mode) {
             this.context = context;
             this.floater = floater;
+            this.mode = mode;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = ProgressDialog.show(context, "Floater", "Checking...");
+            pd = ProgressDialog.show(context, "正在提交", "请稍后...");
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            //return FloaterServer.getInstance().submit(floater);
-            return true;
+            if (mode == EDIT_MODE) {
+                return floaterServer.submit(floater);
+            } else {
+                return floaterServer.submitLeaveWords(floater);
+            }
         }
 
         @Override
         protected void onPostExecute(Boolean isSuccess) {
             super.onPostExecute(isSuccess);
             if (isSuccess) {
-                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "发送成功", Toast.LENGTH_SHORT).show();
+                if (mode == EDIT_MODE) {
+                    FloaterMessageActivity.this.finish();
+                } else {
+                    leaveWordsAdapter.notifyDataSetChanged();
+                    editWord.setText("");
+                    editWord.clearFocus();
+                }
             } else {
                 Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
             }

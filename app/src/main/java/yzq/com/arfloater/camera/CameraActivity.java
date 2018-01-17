@@ -287,9 +287,9 @@ public abstract class CameraActivity extends Activity
             if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA) ||
                     shouldShowRequestPermissionRationale(PERMISSION_STORAGE)) {
                 Toast.makeText(CameraActivity.this,
-                        "Camera AND storage permission are required for this demo", Toast.LENGTH_LONG).show();
+                        "Camera AND storage permission are required", Toast.LENGTH_LONG).show();
             }
-            requestPermissions(new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE}, PERMISSIONS_REQUEST);
+            requestPermissions(new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, }, PERMISSIONS_REQUEST);
         }
     }
 

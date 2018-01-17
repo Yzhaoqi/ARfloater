@@ -35,6 +35,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -309,6 +310,13 @@ public class CameraConnectionFragment extends Fragment {
   @Override
   public void onViewCreated(final View view, final Bundle savedInstanceState) {
     textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+    Button floaterButton = (Button)view.findViewById(R.id.floater_button);
+    floaterButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        ((DetectorActivity)getActivity()).openFloater();
+      }
+    });
   }
 
   @Override

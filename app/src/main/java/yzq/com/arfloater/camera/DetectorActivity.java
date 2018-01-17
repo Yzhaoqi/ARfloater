@@ -125,19 +125,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   private BorderedText borderedText;
 
   private static final int REQUEST_CODE = 1574;
-    @Override
-    public synchronized void onResume() {
-        super.onResume();
-        Button floaterButton = (Button)findViewById(R.id.floater_button);
-        floaterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DetectorActivity.this, FloaterMessageActivity.class);
-                intent.putExtra("title", tracker.getFirstTrackedRecognition().title);
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
-    }
+
+  public void openFloater() {
+    Intent intent = new Intent(DetectorActivity.this, FloaterMessageActivity.class);
+    intent.putExtra("title", tracker.getFirstTrackedRecognition().title);
+    startActivityForResult(intent, REQUEST_CODE);
+  }
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {

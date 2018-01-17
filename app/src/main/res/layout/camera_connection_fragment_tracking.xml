@@ -20,7 +20,7 @@
       <yzq.com.arfloater.camera.AutoFitTextureView
           android:id="@+id/texture"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
+          android:layout_height="wrap_content" />
 
       <yzq.com.arfloater.camera.OverlayView
           android:id="@+id/tracking_overlay"

@@ -179,24 +179,26 @@ public class MultiBoxTracker {
             (int) (multiplier * (rotated ? frameWidth : frameHeight)),
             sensorOrientation,
             false);
-    for (final TrackedRecognition recognition : trackedObjects) {
-      final RectF trackedPos =
-          (objectTracker != null)
-              ? recognition.trackedObject.getTrackedPositionInPreviewFrame()
-              : new RectF(recognition.location);
 
-      getFrameToCanvasMatrix().mapRect(trackedPos);
-      boxPaint.setColor(recognition.color);
+    if (trackedObjects.isEmpty()) return;
 
-      final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
-      canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
+    TrackedRecognition recognition = trackedObjects.get(0);
+    final RectF trackedPos =
+        (objectTracker != null)
+            ? recognition.trackedObject.getTrackedPositionInPreviewFrame()
+            : new RectF(recognition.location);
 
-      final String labelString =
-          !TextUtils.isEmpty(recognition.title)
-              ? String.format("%s %.2f", recognition.title, recognition.detectionConfidence)
-              : String.format("%.2f", recognition.detectionConfidence);
-      borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, labelString);
-    }
+    getFrameToCanvasMatrix().mapRect(trackedPos);
+    boxPaint.setColor(recognition.color);
+
+    final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
+    canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
+
+    final String labelString =
+        !TextUtils.isEmpty(recognition.title)
+            ? String.format("%s %.2f", recognition.title, recognition.detectionConfidence)
+            : String.format("%.2f", recognition.detectionConfidence);
+    borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.bottom, labelString);
   }
 
   public class FirstTrackInfo {
@@ -239,7 +241,7 @@ public class MultiBoxTracker {
         String message =
             "Object tracking support not found. "
                 + "See tensorflow/examples/android/README.md for details.";
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         logger.e(message);
       }
     }

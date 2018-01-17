@@ -43,7 +43,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".camera.DetectorActivity" />
-        <activity android:name=".message.FloaterMessageActivity"></activity>
+        <activity android:name=".message.FloaterMessageActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>

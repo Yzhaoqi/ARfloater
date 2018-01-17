@@ -1,5 +1,7 @@
 package yzq.com.arfloater.server;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +31,6 @@ public class FloaterServer {
         return single;
     }
 
-    // TODO add Server
     public Floater getFloater(FloaterLabel floaterLabel) {
         String mes, result;
         JSONObject object = new JSONObject();
@@ -42,22 +43,70 @@ public class FloaterServer {
         }
 
         mes = object.toString();
+        Floater floater = null;
         try {
             result = connectToURL(new URL("http://172.18.68.174:3000/data/getFloater"), mes);
-            if (result == null || result == "Response Error") {
+            if ("".equals(result) || "Floater not Found".equals(result)) {
+                Log.i("Floater", "not Found");
                 return null;
             } else {
-                Floater floater = new Floater();
+                Log.i("Floater", result);
+                JSONObject obj = new JSONObject(result);
+                Object lwobj = obj.get("leaveWord");
+
+                JSONObject leaveWord = new JSONObject(lwobj.toString());
+                floater = new Floater();
+                floater.setLatitude(obj.getDouble("latitude"));
+                floater.setLongitude(obj.getDouble("longitude"));
+                floater.setTitle(obj.getString("title"));
+                floater.setText(obj.getString("text"));
+                int i = 0;
+                while (leaveWord.has(String.valueOf(i))) {
+                    floater.addLeaveWord(leaveWord.getString(String.valueOf(i)));
+                    i++;
+                }
                 return floater;
             }
         } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     public boolean submit(Floater floater) {
-        return true;
+        return submitFloater(floater, "http://172.18.68.174:3000/data/submitFloater");
+    }
+
+    public boolean submitLeaveWords(Floater floater) {
+        return submitFloater(floater, "http://172.18.68.174:3000/data/submitLeaveWords");
+    }
+
+    private boolean submitFloater(Floater floater, String url) {
+        String mes, result;
+        JSONObject object = new JSONObject(), leaveWordsObj = new JSONObject();
+        try {
+            object.put("latitude", floater.getLatitude());
+            object.put("longitude", floater.getLongitude());
+            object.put("title", floater.getTitle());
+            object.put("text", floater.getText());
+            for (int i = 0; i < floater.getLeaveWords().size(); i++) {
+                leaveWordsObj.put(String.valueOf(i), floater.getLeaveWords().get(i));
+            }
+            object.put("leaveWord", leaveWordsObj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mes = object.toString();
+        try {
+            result = connectToURL(new URL(url), mes);
+            return "Success".equals(result);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private String connectToURL(URL url, String requestContent) {
@@ -86,8 +135,7 @@ public class FloaterServer {
                 StringBuffer response = new StringBuffer();
                 while((line = rd.readLine()) != null) {
                     response.append(line);
-                    response.append('\r');
-                    }
+                }
                 rd.close();
                 return response.toString();
             }

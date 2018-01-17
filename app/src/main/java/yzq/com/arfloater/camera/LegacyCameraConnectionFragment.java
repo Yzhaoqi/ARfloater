@@ -17,6 +17,7 @@ package yzq.com.arfloater.camera;
  */
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -31,12 +32,14 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.io.IOException;
 import java.util.List;
 
 import yzq.com.arfloater.R;
 import yzq.com.arfloater.camera.env.ImageUtils;
+import yzq.com.arfloater.message.FloaterMessageActivity;
 
 public class LegacyCameraConnectionFragment extends Fragment {
   private static final String TAG = "LegacyCameraConnectionFragment";
@@ -144,6 +147,13 @@ public class LegacyCameraConnectionFragment extends Fragment {
   @Override
   public void onViewCreated(final View view, final Bundle savedInstanceState) {
     textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+    Button floaterButton = (Button)view.findViewById(R.id.floater_button);
+    floaterButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        ((DetectorActivity)getActivity()).openFloater();
+      }
+    });
   }
 
   @Override
