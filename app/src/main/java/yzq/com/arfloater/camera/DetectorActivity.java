@@ -16,8 +16,7 @@
 
 package yzq.com.arfloater.camera;
 
-import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -28,16 +27,11 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v7.app.AlertDialog;
 import android.util.Size;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -47,14 +41,12 @@ import java.util.List;
 import java.util.Vector;
 
 import yzq.com.arfloater.R;
-import yzq.com.arfloater.been.Floater;
-import yzq.com.arfloater.been.FloaterLabel;
 import yzq.com.arfloater.camera.env.BorderedText;
 import yzq.com.arfloater.camera.env.ImageUtils;
 import yzq.com.arfloater.camera.env.Logger;
 import yzq.com.arfloater.camera.tracking.MultiBoxTracker;
 import yzq.com.arfloater.camera.OverlayView.DrawCallback;
-import yzq.com.arfloater.server.FloaterServer;
+import yzq.com.arfloater.message.FloaterMessageActivity;
 
 /**
  * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
@@ -132,135 +124,20 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   private BorderedText borderedText;
 
-  private FloaterServer server;
-
+  private static final int REQUEST_CODE = 1574;
     @Override
     public synchronized void onResume() {
         super.onResume();
-        server = FloaterServer.getInstance();
         Button floaterButton = (Button)findViewById(R.id.floater_button);
         floaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FloaterLabel floaterLabel = new FloaterLabel();
-                floaterLabel.setTitle(tracker.getFirstTrackedRecognition().title);
-                new FloaterGettingTask(DetectorActivity.this, floaterLabel, server).execute();
+                Intent intent = new Intent(DetectorActivity.this, FloaterMessageActivity.class);
+                intent.putExtra("title", tracker.getFirstTrackedRecognition().title);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
     }
-
-    private class FloaterGettingTask extends AsyncTask<Void, Void, Floater> {
-        private FloaterServer floaterServer;
-        private Context context;
-        private ProgressDialog pd;
-        private FloaterLabel floaterLabel;
-
-        public FloaterGettingTask(Context context, FloaterLabel floaterLabel, FloaterServer server) {
-            this.floaterServer = FloaterServer.getInstance();
-            this.context = context;
-            this.floaterLabel = floaterLabel;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd = ProgressDialog.show(context, "Floater", "Checking...");
-        }
-
-        @Override
-        protected Floater doInBackground(Void... voids) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return floaterServer.getFloater(floaterLabel);
-        }
-
-        @Override
-        protected void onPostExecute(Floater floater) {
-            pd.cancel();
-            if (floater == null) {
-                showEditDialog();
-            } else {
-                showMessageDialog(floater);
-            }
-        }
-    }
-
-    private class UploadTask extends AsyncTask<Void, Void, Boolean> {
-        private ProgressDialog pd;
-        private Context context;
-        private AlertDialog alertDialog;
-        private Floater floater;
-
-        public UploadTask(Context context, AlertDialog alertDialog, Floater floater) {
-            this.context = context;
-            this.alertDialog = alertDialog;
-            this.floater = floater;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd = ProgressDialog.show(context, "Floater", "Checking...");
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            return FloaterServer.getInstance().submit(floater);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isSuccess) {
-            super.onPostExecute(isSuccess);
-            if (isSuccess) {
-                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
-                alertDialog.dismiss();
-            } else {
-                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-            }
-            pd.dismiss();
-        }
-    }
-
-    // TODO: show edit dialog
-    private void showEditDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(DetectorActivity.this);
-        LayoutInflater inflater = DetectorActivity.this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.floater_edit_dialog, null);
-        dialogBuilder.setView(dialogView);
-        final AlertDialog alertDialog = dialogBuilder.create();
-
-        final EditText editText = (EditText) dialogView.findViewById(R.id.edit_text);
-        Button submit = (Button) dialogView.findViewById(R.id.edit_submit);
-        Button cancel = (Button) dialogView.findViewById(R.id.edit_cancel);
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Floater floater = new Floater();
-                floater.setText(editText.getText().toString());
-                floater.setTitle(tracker.getFirstTrackedRecognition().title);
-                new UploadTask(DetectorActivity.this, alertDialog, floater).execute();
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-
-        alertDialog.show();
-    }
-
-    // TODO: show message dialog
-    private void showMessageDialog(Floater floater) {
-
-    }
-
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
