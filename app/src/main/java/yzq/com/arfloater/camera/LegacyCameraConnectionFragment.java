@@ -151,7 +151,7 @@ public class LegacyCameraConnectionFragment extends Fragment {
     floaterButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        ((DetectorActivity)getActivity()).openFloater();
+        ((DetectorActivity)getActivity()).dealButton();
       }
     });
   }

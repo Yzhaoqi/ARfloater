@@ -4,5 +4,6 @@
     <string name="title">识别物体:</string>
     <string name="add_leave_word">添加留言</string>
     <string name="leave_word_tag">留言:</string>
-    <string name="open_camera">打开相机</string>
+    <string name="open_camera">漂流瓶</string>
+    <string name="floater_extra">定向越野</string>
 </resources>

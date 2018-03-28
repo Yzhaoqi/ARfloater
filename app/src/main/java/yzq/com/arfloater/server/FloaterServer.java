@@ -22,6 +22,8 @@ import yzq.com.arfloater.been.FloaterLabel;
  */
 
 public class FloaterServer {
+    private static final String SERVER_HOST = "http://192.168.1.108:3000";
+
     private FloaterServer(){}
     private static FloaterServer single = null;
     public static FloaterServer getInstance() {
@@ -45,7 +47,7 @@ public class FloaterServer {
         mes = object.toString();
         Floater floater = null;
         try {
-            result = connectToURL(new URL("http://172.18.68.174:3000/data/getFloater"), mes);
+            result = connectToURL(new URL(SERVER_HOST + "/data/getFloater"), mes);
             if ("".equals(result) || "Floater not Found".equals(result)) {
                 Log.i("Floater", "not Found");
                 return null;
@@ -76,11 +78,11 @@ public class FloaterServer {
     }
 
     public boolean submit(Floater floater) {
-        return submitFloater(floater, "http://172.18.68.174:3000/data/submitFloater");
+        return submitFloater(floater, SERVER_HOST + "/data/submitFloater");
     }
 
     public boolean submitLeaveWords(Floater floater) {
-        return submitFloater(floater, "http://172.18.68.174:3000/data/submitLeaveWords");
+        return submitFloater(floater, SERVER_HOST + "/data/submitLeaveWords");
     }
 
     private boolean submitFloater(Floater floater, String url) {
