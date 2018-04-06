@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int PERMISSIONS_REQUEST = 1;
     private static final String PERMISSION_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final String PERMISSION_PHONE = Manifest.permission.READ_PHONE_STATE;
+    private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
+    private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +71,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rg_extra.setOnCheckedChangeListener(this);
     }
 
+    @Override
+    public void onRequestPermissionsResult(
+            final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[2] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                requestPermission();
+            }
+        }
+    }
+
     private boolean hasPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return checkSelfPermission(PERMISSION_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                    checkSelfPermission(PERMISSION_PHONE) == PackageManager.PERMISSION_GRANTED;
+                    checkSelfPermission(PERMISSION_PHONE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED;
         } else {
             return true;
         }
@@ -80,9 +100,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (shouldShowRequestPermissionRationale(PERMISSION_COARSE_LOCATION) ||
-                    shouldShowRequestPermissionRationale(PERMISSION_PHONE)) {
+                    shouldShowRequestPermissionRationale(PERMISSION_PHONE) ||
+                    shouldShowRequestPermissionRationale(PERMISSION_CAMERA) ||
+                    shouldShowRequestPermissionRationale(PERMISSION_STORAGE)) {
             }
-            requestPermissions(new String[] {PERMISSION_COARSE_LOCATION, PERMISSION_PHONE, }, PERMISSIONS_REQUEST);
+            requestPermissions(new String[] {PERMISSION_COARSE_LOCATION, PERMISSION_PHONE, PERMISSION_CAMERA, PERMISSION_STORAGE, }, PERMISSIONS_REQUEST);
         }
     }
 

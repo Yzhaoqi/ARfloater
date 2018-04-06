@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package yzq.com.arfloater.camera;
 
 import android.content.Intent;
@@ -47,7 +31,6 @@ import yzq.com.arfloater.camera.env.ImageUtils;
 import yzq.com.arfloater.camera.env.Logger;
 import yzq.com.arfloater.camera.tracking.MultiBoxTracker;
 import yzq.com.arfloater.camera.OverlayView.DrawCallback;
-import yzq.com.arfloater.extra.sponsor.OrienteeringSponsorActivity;
 import yzq.com.arfloater.message.FloaterMessageActivity;
 
 /**
@@ -57,36 +40,11 @@ import yzq.com.arfloater.message.FloaterMessageActivity;
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
   private static final Logger LOGGER = new Logger();
 
-  // Configuration values for the prepackaged multibox model.
-  private static final int MB_INPUT_SIZE = 224;
-  private static final int MB_IMAGE_MEAN = 128;
-  private static final float MB_IMAGE_STD = 128;
-  private static final String MB_INPUT_NAME = "ResizeBilinear";
-  private static final String MB_OUTPUT_LOCATIONS_NAME = "output_locations/Reshape";
-  private static final String MB_OUTPUT_SCORES_NAME = "output_scores/Reshape";
-  private static final String MB_MODEL_FILE = "file:///android_asset/multibox_model.pb";
-  private static final String MB_LOCATION_FILE =
-          "file:///android_asset/multibox_location_priors.txt";
-
   private static final int TF_OD_API_INPUT_SIZE = 300;
   private static final String TF_OD_API_MODEL_FILE =
           "file:///android_asset/ssd_mobilenet_v1_android_export.pb";
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/coco_labels_list.txt";
 
-  // Configuration values for tiny-yolo-voc. Note that the graph is not included with TensorFlow and
-  // must be manually placed in the assets/ directory by the user.
-  // Graphs and models downloaded from http://pjreddie.com/darknet/yolo/ may be converted e.g. via
-  // DarkFlow (https://github.com/thtrieu/darkflow). Sample command:
-  // ./flow --model cfg/tiny-yolo-voc.cfg --load bin/tiny-yolo-voc.weights --savepb --verbalise
-  private static final String YOLO_MODEL_FILE = "file:///android_asset/graph-tiny-yolo-voc.pb";
-  private static final int YOLO_INPUT_SIZE = 416;
-  private static final String YOLO_INPUT_NAME = "input";
-  private static final String YOLO_OUTPUT_NAMES = "output";
-  private static final int YOLO_BLOCK_SIZE = 32;
-
-  // Which detection model to use: by default uses Tensorflow Object Detection API frozen
-  // checkpoints.  Optionally use legacy Multibox (trained using an older version of the API)
-  // or YOLO.
   private enum DetectorMode {
     TF_OD_API, MULTIBOX, YOLO;
   }
@@ -175,41 +133,18 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     tracker = new MultiBoxTracker(this);
 
     int cropSize = TF_OD_API_INPUT_SIZE;
-    if (MODE == DetectorMode.YOLO) {
-      detector =
-              TensorFlowYoloDetector.create(
-                      getAssets(),
-                      YOLO_MODEL_FILE,
-                      YOLO_INPUT_SIZE,
-                      YOLO_INPUT_NAME,
-                      YOLO_OUTPUT_NAMES,
-                      YOLO_BLOCK_SIZE);
-      cropSize = YOLO_INPUT_SIZE;
-    } else if (MODE == DetectorMode.MULTIBOX) {
-      detector =
-              TensorFlowMultiBoxDetector.create(
-                      getAssets(),
-                      MB_MODEL_FILE,
-                      MB_LOCATION_FILE,
-                      MB_IMAGE_MEAN,
-                      MB_IMAGE_STD,
-                      MB_INPUT_NAME,
-                      MB_OUTPUT_LOCATIONS_NAME,
-                      MB_OUTPUT_SCORES_NAME);
-      cropSize = MB_INPUT_SIZE;
-    } else {
-      try {
-        detector = TensorFlowObjectDetectionAPIModel.create(
-                getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE);
-        cropSize = TF_OD_API_INPUT_SIZE;
-      } catch (final IOException e) {
-        LOGGER.e("Exception initializing classifier!", e);
-        Toast toast =
-                Toast.makeText(
-                        getApplicationContext(), "Classifier could not be initialized", Toast.LENGTH_SHORT);
-        toast.show();
-        finish();
-      }
+
+    try {
+      detector = TensorFlowObjectDetectionAPIModel.create(
+              getAssets(), TF_OD_API_MODEL_FILE, TF_OD_API_LABELS_FILE, TF_OD_API_INPUT_SIZE);
+      cropSize = TF_OD_API_INPUT_SIZE;
+    } catch (final IOException e) {
+      LOGGER.e("Exception initializing classifier!", e);
+      Toast toast =
+              Toast.makeText(
+                      getApplicationContext(), "Classifier could not be initialized", Toast.LENGTH_SHORT);
+      toast.show();
+      finish();
     }
 
     previewWidth = size.getWidth();

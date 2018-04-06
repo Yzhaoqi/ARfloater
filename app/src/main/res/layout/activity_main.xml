@@ -10,35 +10,26 @@
         android:id="@+id/open_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="@string/open_camera"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_extra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/floater_extra"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintVertical_bias="0.20" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/layout_extra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/btn_extra">
 
         <RadioGroup
@@ -63,11 +54,56 @@
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_sor_new"
+            android:layout_marginHorizontal="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+            <EditText
+                android:id="@+id/edit_pwd"
+                android:hint="请创建活动密码"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_sor_update_id"
+            android:layout_marginHorizontal="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+            <EditText
+                android:id="@+id/edit_update_id"
+                android:hint="活动id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_sor_update_pwd"
+            android:layout_marginHorizontal="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+            <EditText
+                android:id="@+id/edit_update_pwd"
+                android:hint="活动密码"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+
+        <android.support.design.widget.TextInputLayout
             android:id="@+id/layout_par"
             android:layout_marginHorizontal="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
             <EditText
                 android:id="@+id/edit_id"
                 android:hint="请输入活动id"
@@ -84,12 +120,5 @@
             android:layout_gravity="end"
             android:text="GO"/>
     </LinearLayout>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="255dp" />
 
 </android.support.constraint.ConstraintLayout>

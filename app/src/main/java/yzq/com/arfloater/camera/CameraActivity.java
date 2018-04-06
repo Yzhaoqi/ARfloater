@@ -41,8 +41,7 @@ public abstract class CameraActivity extends Activity
 
     private static final int PERMISSIONS_REQUEST = 1;
 
-    private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
-    private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 
     private boolean debug = false;
 
@@ -68,11 +67,7 @@ public abstract class CameraActivity extends Activity
 
         setContentView(R.layout.activity_camera);
 
-        if (hasPermission()) {
-            setFragment();
-        } else {
-            requestPermission();
-        }
+        setFragment();
     }
 
     private byte[] lastPreviewFrame;
@@ -256,40 +251,6 @@ public abstract class CameraActivity extends Activity
     protected synchronized void runInBackground(final Runnable r) {
         if (handler != null) {
             handler.post(r);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            final int requestCode, final String[] permissions, final int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                setFragment();
-            } else {
-                requestPermission();
-            }
-        }
-    }
-
-    private boolean hasPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return checkSelfPermission(PERMISSION_CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                    checkSelfPermission(PERMISSION_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            return true;
-        }
-    }
-
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA) ||
-                    shouldShowRequestPermissionRationale(PERMISSION_STORAGE)) {
-                Toast.makeText(CameraActivity.this,
-                        "Camera AND storage permission are required", Toast.LENGTH_LONG).show();
-            }
-            requestPermissions(new String[] {PERMISSION_CAMERA, PERMISSION_STORAGE, }, PERMISSIONS_REQUEST);
         }
     }
 
