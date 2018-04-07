@@ -46,8 +46,8 @@
         <activity
             android:name=".message.FloaterMessageActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".extra.sponsor.OrienteeringSponsorActivity" />
-        <activity android:name=".extra.participator.OrienteeringParticipatorActivity"></activity>
+        <activity android:name=".orienteering.sponsor.OrienteeringSponsorActivity" />
+        <activity android:name=".orienteering.participator.OrienteeringParticipatorActivity"></activity>
     </application>
 
 </manifest>

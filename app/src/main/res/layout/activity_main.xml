@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/btn_extra">
 
         <RadioGroup
@@ -37,13 +37,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rbtn_sponsor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
+                android:checked="true"
                 android:text="我是发起者" />
 
             <RadioButton
@@ -51,6 +52,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="我是参与者" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rg_sponsor_choose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbtn_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="创建活动" />
+
+            <RadioButton
+                android:id="@+id/rbtn_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改活动" />
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
@@ -73,7 +96,7 @@
             android:layout_marginHorizontal="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
             <EditText
                 android:id="@+id/edit_update_id"
                 android:hint="活动id"
@@ -87,9 +110,10 @@
             android:layout_marginHorizontal="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
             <EditText
                 android:id="@+id/edit_update_pwd"
+                android:inputType="textPassword"
                 android:hint="活动密码"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -103,7 +127,7 @@
             android:layout_marginHorizontal="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
             <EditText
                 android:id="@+id/edit_id"
                 android:hint="请输入活动id"

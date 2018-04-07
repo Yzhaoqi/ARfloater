@@ -1,4 +1,4 @@
-package yzq.com.arfloater.extra.participator;
+package yzq.com.arfloater.orienteering.participator;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -81,13 +81,21 @@ public class OrienteeringParticipatorActivity extends AppCompatActivity {
         } else {
             String title = data.getStringExtra("title");
             if (title.equals(mFeatures.get(location).getTitle())) {
-                Toast.makeText(this, "验证成功", Toast.LENGTH_SHORT).show();
-                btnCheck.setVisibility(View.GONE);
-                checkList[location] = true;
+                if (mFeatures.get(location).getHas_question()) {
+                    showQuestionDialog();
+                } else {
+                    Toast.makeText(this, "验证成功", Toast.LENGTH_SHORT).show();
+                    btnCheck.setVisibility(View.GONE);
+                    checkList[location] = true;
+                }
             } else {
                 Toast.makeText(this, "验证失败", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void showQuestionDialog() {
+        //TODO show dialog
     }
 
 

@@ -1,4 +1,4 @@
-package yzq.com.arfloater.extra.sponsor;
+package yzq.com.arfloater.orienteering.sponsor;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +52,15 @@ public class FeaturesAdapter extends RecyclerView.Adapter<FeaturesAdapter.MyView
         holder.itemView.setTag(position);
         holder.getTitle().setText("特征物："+f.getTitle());
         holder.getHint().setText("提示："+f.getHint());
+        if (f.getHas_question()) {
+            holder.getQuestion().setVisibility(View.VISIBLE);
+            holder.getAnswer().setVisibility(View.VISIBLE);
+            holder.getQuestion().setText("问题："+f.getQuestion());
+            holder.getAnswer().setText("答案："+f.getAnswer());
+        } else {
+            holder.getQuestion().setVisibility(View.GONE);
+            holder.getAnswer().setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -60,12 +69,14 @@ public class FeaturesAdapter extends RecyclerView.Adapter<FeaturesAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView title, hint;
+        private TextView title, hint, question, answer;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.sponsor_title);
             hint = itemView.findViewById(R.id.sponsor_hint);
+            question = itemView.findViewById(R.id.sponsor_question);
+            answer = itemView.findViewById(R.id.sponsor_answer);
         }
 
         public TextView getHint() {
@@ -74,6 +85,14 @@ public class FeaturesAdapter extends RecyclerView.Adapter<FeaturesAdapter.MyView
 
         public TextView getTitle() {
             return title;
+        }
+
+        public TextView getQuestion() {
+            return question;
+        }
+
+        public TextView getAnswer() {
+            return answer;
         }
     }
 }

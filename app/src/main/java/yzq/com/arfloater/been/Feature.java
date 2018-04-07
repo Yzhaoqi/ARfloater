@@ -7,7 +7,8 @@ import java.text.DecimalFormat;
  */
 
 public class Feature{
-    private String title, hint;
+    private String title, hint, question, answer;
+    private boolean has_question = false;
     private double longitude, latitude;
     private static DecimalFormat df = new DecimalFormat("#.##");
 
@@ -43,4 +44,27 @@ public class Feature{
         this.hint = hint;
     }
 
+    public void setHas_question(boolean has_question) {
+        this.has_question = has_question;
+    }
+
+    public boolean getHas_question() {
+        return has_question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
 }

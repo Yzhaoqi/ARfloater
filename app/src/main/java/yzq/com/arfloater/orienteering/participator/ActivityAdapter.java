@@ -1,4 +1,4 @@
-package yzq.com.arfloater.extra.participator;
+package yzq.com.arfloater.orienteering.participator;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

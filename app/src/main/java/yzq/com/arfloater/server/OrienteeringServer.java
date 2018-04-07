@@ -1,7 +1,5 @@
 package yzq.com.arfloater.server;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,16 +44,22 @@ public class OrienteeringServer {
         return ERROR;
     }
 
-    public boolean submitActivity(List<Feature> mFeatureArray, String id) {
+    public boolean submitActivity(List<Feature> mFeatureArray, String id, String pwd) {
         String mes, result;
         JSONObject activity = new JSONObject(), data = new JSONObject();
         try {
-            activity.put("id", id);
+            activity.put("activity_id", id);
+            activity.put("password", pwd);
             for (int i = 0; i < mFeatureArray.size(); i++) {
                 JSONObject in = new JSONObject();
                 Feature f = mFeatureArray.get(i);
                 in.put("title", f.getTitle());
                 in.put("hint", f.getHint());
+                in.put("has_question", f.getHas_question());
+                if (f.getHas_question()) {
+                    in.put("question", f.getQuestion());
+                    in.put("answer", f.getAnswer());
+                }
                 in.put("latitude", f.getLatitude());
                 in.put("longitude", f.getLongitude());
                 data.put(String.valueOf(i), in);
@@ -70,12 +74,55 @@ public class OrienteeringServer {
         return false;
     }
 
+    public boolean updateActivity(List<Feature> mFeatureArray, String id) {
+        String mes, result;
+        JSONObject activity = new JSONObject(), data = new JSONObject();
+        try {
+            activity.put("activity_id", id);
+            for (int i = 0; i < mFeatureArray.size(); i++) {
+                JSONObject in = new JSONObject();
+                Feature f = mFeatureArray.get(i);
+                in.put("title", f.getTitle());
+                in.put("hint", f.getHint());
+                in.put("has_question", f.getHas_question());
+                if (f.getHas_question()) {
+                    in.put("question", f.getQuestion());
+                    in.put("answer", f.getAnswer());
+                }
+                in.put("latitude", f.getLatitude());
+                in.put("longitude", f.getLongitude());
+                data.put(String.valueOf(i), in);
+            }
+            activity.put("data", data);
+            mes = activity.toString();
+            result = connectToURL(new URL(SERVER_HOST + "/updateActivity"), "POST", mes);
+            return result.equals("Success");
+        } catch (JSONException | MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkPassword(String id, String pwd) {
+        JSONObject req = new JSONObject();
+        String res;
+        try {
+            req.put("activity_id", id);
+            req.put("password", pwd);
+            res = connectToURL(new URL(SERVER_HOST+"checkPassword"), "POST", req.toString());
+            return res.equals("Success");
+        } catch (JSONException | MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean getActivity(String id) {
         mFeatures = new ArrayList<Feature>();
         String res, mes;
         JSONObject aId = new JSONObject();
         try {
-            aId.put("id", id);
+            aId.put("activity_id", id);
             mes = aId.toString();
             res = connectToURL(new URL(SERVER_HOST+"/getActivity"), "POST", mes);
             if (!res.equals(ERROR) && !res.equals("Fail")) {
@@ -86,6 +133,11 @@ public class OrienteeringServer {
                     Feature feature = new Feature();
                     feature.setHint(data.getString("hint"));
                     feature.setTitle(data.getString("title"));
+                    feature.setHas_question(data.getBoolean("has_question"));
+                    if (feature.getHas_question()) {
+                        feature.setQuestion(data.getString("question"));
+                        feature.setAnswer(data.getString("answer"));
+                    }
                     feature.setLongitude(data.getDouble("longitude"));
                     feature.setLatitude(data.getDouble("latitude"));
                     mFeatures.add(feature);
