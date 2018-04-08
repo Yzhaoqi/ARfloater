@@ -18,16 +18,7 @@ public class LocationHelper {
     private BDLocation mLocation;
     private Context context;
 
-    private static LocationHelper locationHelper = null;
-
-    public static LocationHelper getInstance(Context context) {
-        if (locationHelper == null) {
-            locationHelper = new LocationHelper(context);
-        }
-        return locationHelper;
-    }
-
-    private LocationHelper(Context context) {
+    public LocationHelper(Context context) {
         this.context = context;
         locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
     }

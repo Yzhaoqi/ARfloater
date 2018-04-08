@@ -75,7 +75,7 @@ public class OrienteeringSponsorActivity extends AppCompatActivity implements Vi
         featuresAdapter = new FeaturesAdapter(mFeatureArray);
         rv.setAdapter(featuresAdapter);
         featuresAdapter.setOnItemClickListener(this);
-        locationHelper = LocationHelper.getInstance(this);
+        locationHelper = new LocationHelper(this);
         locationHelper.registerListener();
     }
 

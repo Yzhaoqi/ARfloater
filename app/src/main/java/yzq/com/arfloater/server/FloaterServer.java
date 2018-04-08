@@ -22,7 +22,7 @@ import yzq.com.arfloater.been.FloaterLabel;
  */
 
 public class FloaterServer {
-    private static final String SERVER_HOST = "http://192.168.1.108:3000/floater";
+    private static final String SERVER_HOST = "http://123.207.18.112:3000/floater";
 
     private FloaterServer(){}
     private static FloaterServer single = null;

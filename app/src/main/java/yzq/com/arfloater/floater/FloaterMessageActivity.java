@@ -52,7 +52,7 @@ public class FloaterMessageActivity extends AppCompatActivity implements View.On
         floaterLabel = new FloaterLabel();
         floaterLabel.setTitle(getIntent().getStringExtra("title"));
         floaterServer = FloaterServer.getInstance();
-        locationHelper = LocationHelper.getInstance(this);
+        locationHelper = new LocationHelper(this);
 
         editLayout = (LinearLayout)findViewById(R.id.edit_layout);
         messageLayout = (LinearLayout)findViewById(R.id.message_layout);

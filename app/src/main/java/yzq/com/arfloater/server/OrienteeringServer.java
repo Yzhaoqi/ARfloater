@@ -21,7 +21,7 @@ import yzq.com.arfloater.been.Feature;
  */
 
 public class OrienteeringServer {
-    private static final String SERVER_HOST = "http://192.168.1.108:3000/orienteering";
+    private static final String SERVER_HOST = "http://123.207.18.112:3000/orienteering";
     public static final String ERROR = "SERVER_ERROR";
 
     private List<Feature> mFeatures;
@@ -109,7 +109,7 @@ public class OrienteeringServer {
         try {
             req.put("activity_id", id);
             req.put("password", pwd);
-            res = connectToURL(new URL(SERVER_HOST+"checkPassword"), "POST", req.toString());
+            res = connectToURL(new URL(SERVER_HOST+"/checkPassword"), "POST", req.toString());
             return res.equals("Success");
         } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();

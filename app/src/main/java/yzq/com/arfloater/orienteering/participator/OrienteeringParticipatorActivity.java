@@ -48,7 +48,7 @@ public class OrienteeringParticipatorActivity extends AppCompatActivity {
 
         mFeatures = OrienteeringServer.getInstance().getFeatureList();
         checkList = new boolean[mFeatures.size()];
-        locationHelper = LocationHelper.getInstance(this);
+        locationHelper = new LocationHelper(this);
         locationHelper.registerListener();
 
         rv = findViewById(R.id.rv_activity);
