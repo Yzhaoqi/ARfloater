@@ -31,18 +31,13 @@ import yzq.com.arfloater.camera.env.ImageUtils;
 import yzq.com.arfloater.camera.env.Logger;
 import yzq.com.arfloater.camera.tracking.MultiBoxTracker;
 import yzq.com.arfloater.camera.OverlayView.DrawCallback;
-import yzq.com.arfloater.message.FloaterMessageActivity;
+import yzq.com.arfloater.floater.FloaterMessageActivity;
 
-/**
- * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
- * objects.
- */
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
   private static final Logger LOGGER = new Logger();
 
   private static final int TF_OD_API_INPUT_SIZE = 300;
-  private static final String TF_OD_API_MODEL_FILE =
-          "file:///android_asset/ssd_mobilenet_v1_android_export.pb";
+  private static final String TF_OD_API_MODEL_FILE = "file:///android_asset/ssd_mobilenet_v1_android_export.pb";
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/coco_labels_list.txt";
 
   private enum DetectorMode {

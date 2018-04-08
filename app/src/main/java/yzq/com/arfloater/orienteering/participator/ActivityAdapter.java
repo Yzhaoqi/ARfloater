@@ -1,6 +1,7 @@
 package yzq.com.arfloater.orienteering.participator;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView title, hint;
-        private Button btn_check;
+        private FloatingActionButton btn_check;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -66,7 +67,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.MyView
             return title;
         }
 
-        public Button getBtn_check() {
+        public FloatingActionButton getBtn_check() {
             return btn_check;
         }
     }

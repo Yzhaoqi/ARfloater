@@ -1,4 +1,4 @@
-package yzq.com.arfloater.message;
+package yzq.com.arfloater.floater;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,6 +22,7 @@ import com.baidu.location.BDLocation;
 import yzq.com.arfloater.R;
 import yzq.com.arfloater.been.Floater;
 import yzq.com.arfloater.been.FloaterLabel;
+import yzq.com.arfloater.location.LocationHelper;
 import yzq.com.arfloater.server.FloaterServer;
 
 public class FloaterMessageActivity extends AppCompatActivity implements View.OnClickListener {

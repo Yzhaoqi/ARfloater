@@ -1,6 +1,5 @@
-package yzq.com.arfloater.message;
+package yzq.com.arfloater.floater;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

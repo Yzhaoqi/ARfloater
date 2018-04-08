@@ -17,7 +17,6 @@ package yzq.com.arfloater.camera;
  */
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -39,7 +38,6 @@ import java.util.List;
 
 import yzq.com.arfloater.R;
 import yzq.com.arfloater.camera.env.ImageUtils;
-import yzq.com.arfloater.message.FloaterMessageActivity;
 
 public class LegacyCameraConnectionFragment extends Fragment {
   private static final String TAG = "LegacyCameraConnectionFragment";

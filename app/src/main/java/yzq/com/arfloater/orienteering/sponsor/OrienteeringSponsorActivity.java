@@ -31,7 +31,7 @@ import java.util.List;
 import yzq.com.arfloater.R;
 import yzq.com.arfloater.been.Feature;
 import yzq.com.arfloater.camera.DetectorActivity;
-import yzq.com.arfloater.message.LocationHelper;
+import yzq.com.arfloater.location.LocationHelper;
 import yzq.com.arfloater.server.OrienteeringServer;
 
 public class OrienteeringSponsorActivity extends AppCompatActivity implements View.OnClickListener, FeaturesAdapter.OnItemClickListener{

@@ -44,7 +44,7 @@
         </activity>
         <activity android:name=".camera.DetectorActivity" />
         <activity
-            android:name=".message.FloaterMessageActivity"
+            android:name=".floater.FloaterMessageActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".orienteering.sponsor.OrienteeringSponsorActivity" />
         <activity android:name=".orienteering.participator.OrienteeringParticipatorActivity"></activity>
