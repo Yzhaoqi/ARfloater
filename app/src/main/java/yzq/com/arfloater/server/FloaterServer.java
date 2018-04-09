@@ -54,18 +54,19 @@ public class FloaterServer {
             } else {
                 Log.i("Floater", result);
                 JSONObject obj = new JSONObject(result);
-                Object lwobj = obj.get("leaveWord");
-
-                JSONObject leaveWord = new JSONObject(lwobj.toString());
                 floater = new Floater();
                 floater.setLatitude(obj.getDouble("latitude"));
                 floater.setLongitude(obj.getDouble("longitude"));
                 floater.setTitle(obj.getString("title"));
                 floater.setText(obj.getString("text"));
                 int i = 0;
-                while (leaveWord.has(String.valueOf(i))) {
-                    floater.addLeaveWord(leaveWord.getString(String.valueOf(i)));
-                    i++;
+                if (obj.has("leaveWord")) {
+                    Object lwobj = obj.get("leaveWord");
+                    JSONObject leaveWord = new JSONObject(lwobj.toString());
+                    while (leaveWord.has(String.valueOf(i))) {
+                        floater.addLeaveWord(leaveWord.getString(String.valueOf(i)));
+                        i++;
+                    }
                 }
                 return floater;
             }

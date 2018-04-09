@@ -1,5 +1,7 @@
 package yzq.com.arfloater.server;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -130,6 +132,7 @@ public class OrienteeringServer {
                 int i = 0;
                 while (obj.has(String.valueOf(i))) {
                     JSONObject data = (JSONObject) obj.get(String.valueOf(i));
+                    Log.i("data", String.valueOf(i) + data.toString());
                     Feature feature = new Feature();
                     feature.setHint(data.getString("hint"));
                     feature.setTitle(data.getString("title"));

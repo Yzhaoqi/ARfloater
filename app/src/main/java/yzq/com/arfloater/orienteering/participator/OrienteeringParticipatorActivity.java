@@ -105,7 +105,7 @@ public class OrienteeringParticipatorActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.dialog_feature, null);
+        View view = inflater.inflate(R.layout.dialog_question, null);
         final EditText editAnswer = view.findViewById(R.id.dialog_answer);
         TextView textView = view.findViewById(R.id.dialog_question);
 
@@ -117,7 +117,7 @@ public class OrienteeringParticipatorActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (editAnswer.getText().toString().equals(feature.getAnswer())) {
                             Toast.makeText(OrienteeringParticipatorActivity.this, "回答正确", Toast.LENGTH_SHORT).show();
-                            btnCheck.setBackgroundResource(R.mipmap.icon_float_button_checked);
+                            btnCheck.setImageResource(R.mipmap.icon_float_button_checked);
                             btnCheck.setClickable(false);
                             checkList[position] = true;
                         } else {

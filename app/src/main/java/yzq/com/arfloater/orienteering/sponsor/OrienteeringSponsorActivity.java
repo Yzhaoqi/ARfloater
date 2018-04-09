@@ -50,11 +50,13 @@ public class OrienteeringSponsorActivity extends AppCompatActivity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             id = bundle.getString("ID");
             pwd = bundle.getString("PASSWORD");
             isNew = bundle.getBoolean("IS_NEW");
+            OrienteeringSponsorActivity.this.setTitle("活动id："+id);
         }
         setContentView(R.layout.activity_orienteering_sponsor);
         rv = findViewById(R.id.rv_feature);
@@ -220,7 +222,7 @@ public class OrienteeringSponsorActivity extends AppCompatActivity implements Vi
         protected void onPostExecute(Boolean isSuccess) {
             pd.cancel();
             if (isSuccess) {
-                Toast.makeText(context, "提交成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "提交成功, 您的活动id为"+id, Toast.LENGTH_SHORT).show();
                 OrienteeringSponsorActivity.this.finish();
             } else {
                 Toast.makeText(context, "提交失败", Toast.LENGTH_SHORT).show();
