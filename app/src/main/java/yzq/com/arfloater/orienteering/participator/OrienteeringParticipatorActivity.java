@@ -90,7 +90,7 @@ public class OrienteeringParticipatorActivity extends AppCompatActivity {
                     showQuestionDialog();
                 } else {
                     Toast.makeText(this, "验证成功", Toast.LENGTH_SHORT).show();
-                    btnCheck.setBackgroundResource(R.mipmap.icon_float_button_checked);
+                    btnCheck.setImageResource(R.mipmap.icon_float_button_checked);
                     btnCheck.setClickable(false);
                     checkList[position] = true;
                 }
